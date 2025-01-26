@@ -45,12 +45,9 @@ def main():
                 texts, images, text_summaries, images_summaries = processing_pipeline(file_path)  
                 st.session_state.rag_agent.add_documents(texts,images, text_summaries, images_summaries)
                 st.session_state.retriever = st.session_state.rag_agent.retriever
-                info = st.session_state.retriever.invoke("Tecnicas de rayos x")
-        
-
                 st.session_state["processed_pdf"] = True  
                 st.success("PDF procesado correctamente. Puedes empezar a conversar.")
-                st.success(len(info))
+                
             except Exception as e:
                 st.error(f"Error procesando el archivo: {str(e)}")
                 return

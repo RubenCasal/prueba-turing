@@ -1,42 +1,31 @@
 version: "3.9"
 
 services:
+  ollama:
+    build:
+      context: ./Ollama  # Ruta hacia la carpeta de Ollama
+      dockerfile: Dockerfile  # Usa el Dockerfile de Ollama
+    container_name: ollama
+    networks:
+      - app-network
+    ports:
+      - "11434:11434"  # Puerto para Ollama
+    volumes:
+      - ollama:/root/.ollama  # Volumen para almacenar modelos persistentes
+
   unstructured:
-    image: downloads.unstructured.io/unstructured-io/unstructured:latest
+    build:
+      context: ./RAG_APP  # Ruta hacia la carpeta de RAG_APP
+      dockerfile: Dockerfile  # Usa el Dockerfile de RAG_APP
     container_name: unstructured
     networks:
       - app-network
     stdin_open: true
     tty: true
     ports:
-      - "8501:8501"  # Puerto estándar de Streamlit
-    volumes:
-      - ./app.py:/app/app.py                 
-      - ./process_pdf.py:/app/process_pdf.py 
-      - ./rag_agent.py:/app/rag_agent.py     
-      - ./requirements.txt:/app/requirements.txt 
-    command: >
-      sh -c "
-      pip install -r /app/requirements.txt &&
-      streamlit run /app/app.py --server.port 8501 --server.address 0.0.0.0
-      "
-
-  ollama:
-    image: ollama/ollama
-    container_name: ollama
-    networks:
-      - app-network
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama:/root/.ollama
-    command: >
-      sh -c "
-      ollama pull nomic-embed-text &&
-      ollama pull llama3.1 &&
-      ollama pull llava &&
-      tail -f /dev/null
-      "
+      - "8501:8501"  # Puerto para Streamlit
+    depends_on:
+      - ollama  # Asegura que ollama se ejecute antes que unstructured
 
 networks:
   app-network:
