@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  unstructured:
+    image: downloads.unstructured.io/unstructured-io/unstructured:latest
+    container_name: unstructured
+    networks:
+      - app-network
+    stdin_open: true
+    tty: true
+    ports:
+      - "8501:8501"  # Puerto estándar de Streamlit
+    volumes:
+      - ./app.py:/app/app.py                 
+      - ./process_pdf.py:/app/process_pdf.py 
+      - ./rag_agent.py:/app/rag_agent.py     
+      - ./requirements.txt:/app/requirements.txt 
+    command: >
+      sh -c "
+      pip install -r /app/requirements.txt &&
+      streamlit run /app/app.py --server.port 8501 --server.address 0.0.0.0
+      "
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    networks:
+      - app-network
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    command: >
+      sh -c "
+      ollama pull nomic-embed-text &&
+      ollama pull llama3.1 &&
+      ollama pull llava &&
+      tail -f /dev/null
+      "
+
+networks:
+  app-network:
+
+volumes:
+  ollama:
