@@ -6,10 +6,10 @@ from langchain.retrievers.multi_vector import MultiVectorRetriever
 from langchain.embeddings import OllamaEmbeddings
 from langchain_ollama import ChatOllama
 from base64 import b64decode
-import random
+
 class RAG_AGENT:
     def __init__(self,persist_directory="./chroma_data"):
-        self.persist_directory = persist_directory
+        self.persist_directory = persist_directory 
         self.ollama_embeddings = OllamaEmbeddings(
         base_url="http://ollama:11434",
         model="nomic-embed-text"

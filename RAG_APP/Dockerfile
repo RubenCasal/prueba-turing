@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir \
     langchain-ollama \
     streamlit \
     ollama \
-    langchain-community
+    langchain-community 
 
 # Exponer el puerto para Streamlit
 EXPOSE 8501

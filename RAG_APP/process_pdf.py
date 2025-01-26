@@ -13,7 +13,7 @@ def processing_pipeline(file_path):
 
     text_summaries, images_summaries = summarize(texts,images)
 
-
+ 
     return texts, images, text_summaries, images_summaries
    
    
